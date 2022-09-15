@@ -34,18 +34,27 @@ class TableroaPanela(tk.Frame):
 		self.gelazka_tamaina = gelazka_tamaina
 
 		self.canvas = tk.Canvas(
-			width=self.tamaina[0]  * self.gelazka_tamaina,
-			height=self.tamaina[1] * self.gelazka_tamaina,
-			bg='#eee'
+			width=self.tamaina[0]  * self.gelazka_tamaina+1,
+			height=self.tamaina[1] * self.gelazka_tamaina+1,
+			bg='#eee', borderwidth=0, highlightthickness=0
 		)
 		self.canvas.pack(expand=tk.YES, fill=None)
+
+		self.tab = Tableroa()
+		self.jokatzen = None
+		self.tableroa_ezabatu()
+
 
 	def marratu_gelazka(self, x,y,color):
 		self.canvas.create_rectangle(x*self.gelazka_tamaina, y*self.gelazka_tamaina,
 									(x+1)*self.gelazka_tamaina, (y+1)*self.gelazka_tamaina, fill=color)
 
-	def marraztu_tableroa(self):
+	def tableroa_ezabatu(self):
 		self.canvas.delete("all")
+		self.canvas.create_rectangle(0, 0, self.tamaina[0] * self.gelazka_tamaina, self.tamaina[1] * self.gelazka_tamaina, fill='#eee')
+
+	def marraztu_tableroa(self):
+		self.tableroa_ezabatu()
 		for i in range(self.tab.tamaina[1]):
 			for j in range(self.tab.tamaina[0]):
 				if self.tab.tab[i][j]:
@@ -62,17 +71,16 @@ class TableroaPanela(tk.Frame):
 			self.tab.betetako_lerroak_ezabatu()
 			self.tab.mugitu_behera()
 		except Exception as error:
-			self.tab.pieza_finkotu(self.tab.posizioa)
-			pieza_posibleak = [Laukia, Zutabea, Lforma, LformaAlderantzizko, Zforma, ZformaAlderantzizko, Tforma]
 			try:
+				self.tab.pieza_finkotu(self.tab.posizioa)
+				pieza_posibleak = [Laukia, Zutabea, Lforma, LformaAlderantzizko, Zforma, ZformaAlderantzizko, Tforma]
 				self.tab.sartu_pieza(random.choice(pieza_posibleak)())
 			except Exception as e:
 				print("GAMEOVER")
 				self.tab.hasieratu_tableroa()
 				return
-		finally:
-			self.after(400, self.pausu_bat)
-			self.marraztu_tableroa()
+		self.after(400, self.pausu_bat)
+		self.marraztu_tableroa()
 		
 
 	def joku_kontrola(self, event):
@@ -91,10 +99,11 @@ class TableroaPanela(tk.Frame):
 			self.marraztu_tableroa()
 
 	def jolastu(self):
-		self.tab = Tableroa()
+		if self.jokatzen:
+			self.after_cancel(self.jokatzen)
 		self.tab.hasieratu_tableroa()
 		pieza_posibleak = [Laukia, Zutabea, Lforma, LformaAlderantzizko, Zforma, ZformaAlderantzizko, Tforma]
 		self.tab.sartu_pieza(random.choice(pieza_posibleak)())
 		self.marraztu_tableroa()
-		self.after(400, self.pausu_bat)
+		self.jokatzen = self.after(400, self.pausu_bat)
 		

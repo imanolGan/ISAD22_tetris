@@ -45,7 +45,7 @@ class Tableroa:
 
 	def mugitu_behera(self):
 		if not self.pieza:
-			return
+			raise Exception("Ez dago piezarik")
 		posizio_berria = (self.posizioa[0]+1, self.posizioa[1])
 		if self.probatu_mugimendua(posizio_berria):
 			self.posizioa = posizio_berria
