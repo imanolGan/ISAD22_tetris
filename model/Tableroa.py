@@ -3,10 +3,12 @@ from model import Piezak
 class Tableroa:
 	def __init__(self, tamaina=(10,20)):
 		self.tamaina = tamaina
+		self.hasieratu_tableroa()
 
 	def hasieratu_tableroa(self):
 		self.tab = [ [ None for y in range(self.tamaina[0])]for x in range(self.tamaina[1])]
 		self.pieza = None
+		self.puntuazioa = 0
 
 	def probatu_mugimendua(self, pos_berria):
 		for i in range(4):
@@ -35,6 +37,7 @@ class Tableroa:
 			if not self.probatu_mugimendua(posizio_berria):
 				self.posizioa = (posizio_berria[0]-1,posizio_berria[1])
 				break
+		self.puntuazioa += (i-1)*2
 
 	def sartu_pieza(self,pieza):
 		x = -pieza.min_x()
@@ -90,10 +93,19 @@ class Tableroa:
 		return True
 
 	def betetako_lerroak_ezabatu(self):
+		count = 0
 		for i in range(self.tamaina[1]):
 			if self.lerroa_beteta_dago(i):
 				self.lerroa_ezabatu(i)
-
+				count +=1
+		if count == 1:
+			self.puntuazioa += 100
+		elif count == 2:
+			self.puntuazioa += 300
+		elif count == 3:
+			self.puntuazioa += 500
+		elif count == 4:
+			self.puntuazioa += 800
 
 		
 	def imprimatu(self):

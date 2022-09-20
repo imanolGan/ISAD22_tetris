@@ -17,7 +17,13 @@ class JokatuLeioa(object):
 		button = tk.Button(self.window, text="Partida hasi")
 		button.pack()
 
-		canvas = TableroaPanela(master=self.window)
+		puntuazioa = tk.StringVar()
+		puntuazioa.set("Puntuazioa: 0")
+
+		puntuazioalabel = tk.Label(self.window, textvariable=puntuazioa)
+		puntuazioalabel.pack()
+
+		canvas = TableroaPanela(master=self.window, puntuazioalabel = puntuazioa)
 		button.configure(command=canvas.jolastu)
 		canvas.pack()
 		self.window.bind("<Up>", canvas.joku_kontrola)
@@ -28,8 +34,9 @@ class JokatuLeioa(object):
 		self.window.mainloop()
 
 class TableroaPanela(tk.Frame):
-	def __init__(self, tamaina=(10,20), gelazka_tamaina=20, master=None):
+	def __init__(self, tamaina=(10,20), gelazka_tamaina=20,puntuazioalabel=None, master=None):
 		tk.Frame.__init__(self, master)
+		self.puntuazio_panela = puntuazioalabel
 		self.tamaina = tamaina
 		self.gelazka_tamaina = gelazka_tamaina
 
@@ -64,6 +71,7 @@ class TableroaPanela(tk.Frame):
 				x = self.tab.posizioa[0] + self.tab.pieza.get_x(i)
 				y = self.tab.posizioa[1] + self.tab.pieza.get_y(i)
 				self.marratu_gelazka(y,x,self.tab.pieza.get_kolorea())
+		self.puntuazioa_eguneratu()
 
 
 	def pausu_bat(self):
@@ -81,6 +89,11 @@ class TableroaPanela(tk.Frame):
 				return
 		self.after(400, self.pausu_bat)
 		self.marraztu_tableroa()
+
+	def puntuazioa_eguneratu(self):
+		if self.puntuazio_panela:
+			self.puntuazio_panela.set(f"Puntuazioa: {self.tab.puntuazioa}")
+
 		
 
 	def joku_kontrola(self, event):
