@@ -26,7 +26,7 @@ class HasierakoLeioa(object):
         self.window.configure(bg='light blue')
 
         # TETRIS LOGO
-        #logoa = tk.PhotoImage(file='logo.png')
+        logoa = tk.PhotoImage(file='logo.png')
         #logoa_sub = logoa.subsample(2)  # dimentsioak txikitu
         #log_img = tk.Label(self.window, image=logoa_sub)
         #log_img.pack()
