@@ -2,63 +2,51 @@ import random
 import tkinter as tk
 from model.Tableroa import Tableroa
 from model.Piezak import *
-#from model.Erabiltzaileak import *
-#from tkinter import messagebox
+from PIL import ImageTk, Image
 
 class JokatuLeioa(object):
 	"""docstring for JokatuLeioa"""
-	global erab_izen, erab_pas, erab1, erab_gal1, erab_gal2, signOn, login, canvas, zail_maila
-	window=tk.Tk()
-
-	erab_izen = tk.StringVar()
-	erab_pas = tk.StringVar()
-	erab_gal1 = tk.StringVar()
-	erab_gal2 = tk.StringVar()
-
-	login=tk.Frame(window)
-	signOn = tk.Frame(window)
-	zail_maila = tk.Frame(window)
-
-	#erab1 = Erabiltzailea()
-
-	def __init__(self,abiadura):
+	def __init__(self,abiadura, tamai):
 		super(JokatuLeioa, self).__init__()
-		#self.window = tk.Tk()
-		self.window.geometry('300x460')
+		self.window = tk.Tk()
+		self.window.geometry('450x520')
 		self.window.title("Tetris jokoa")
 		self.window.configure(bg='light blue')
 
+		#TODO logoa ez da ikusten
+		self.img = ImageTk.PhotoImage(Image.open("logo.png").reduce(2))
+		self.panel = tk.Label(self.window, image=self.img, bg="light blue")
+		self.panel.pack(side="top", fill="both", expand="no")
+
+		button= tk.Button(self.window, text="Partida hasi")
+		button.pack()
 
 		# TETRIS LOGO
-		logoa = tk.PhotoImage(file='logo.png')
-		logoa_sub = logoa.subsample(2)  # dimentsioak txikitu
-		log_img = tk.Label(self.window, image=logoa_sub)
-		log_img.pack()
-		self.hasierakoOrria()
 
-
-
+		#logoa = ImageTk.PhotoImage(file='logo.png')
+		#logoa_sub = logoa.subsample(2)  # dimentsioak txikitu
+		#log_img = tk.Label(self.window, image=logoa_sub)
+		#log_img.pack()
 
 		#zail_maila.destroy()
 		# ---------------------------------BEHIN SARTUTRA
 		puntuazioa = tk.StringVar()
 		puntuazioa.set("Puntuazioa: 0")
-
-		identif = tk.Frame(self.window)
-
-		puntuazioalabel = tk.Label(identif, textvariable=puntuazioa)
+		puntuazioalabel = tk.Label(self.window, textvariable=puntuazioa)
 		puntuazioalabel.pack()
 
-		canvas = TableroaPanela(master=self.window, puntuazioalabel=puntuazioa)
-		canvas.jolastu(abiadura)
+		canvas = TableroaPanela(master=self.window,tamaina= tamai,puntuazioalabel=puntuazioa)
+		button.configure(command=lambda :canvas.jolastu(abiadura))
 		canvas.pack()
 		self.window.bind("<Up>", canvas.joku_kontrola)
 		self.window.bind("<Down>", canvas.joku_kontrola)
 		self.window.bind("<Right>", canvas.joku_kontrola)
 		self.window.bind("<Left>", canvas.joku_kontrola)
 
+
+
 class TableroaPanela(tk.Frame):
-	def __init__(self, tamaina=(10,20), gelazka_tamaina=20,puntuazioalabel=None, master=None):
+	def __init__(self, tamaina, gelazka_tamaina=20,puntuazioalabel=None, master=None):
 		tk.Frame.__init__(self, master)
 		self.puntuazio_panela = puntuazioalabel
 		self.tamaina = tamaina

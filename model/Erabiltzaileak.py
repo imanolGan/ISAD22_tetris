@@ -4,9 +4,7 @@ import view.db
 class Erabiltzailea:
 
     def __init__(self):
-        #self.izena = izena
-        #self.pasahitza=pa
-        self. konektatuta= False
+        self. konektatuta= False #TODO hau hemen edo db?
         self.saiakerak=3
 
     #def erabiltzailea_erregistratu(self):
@@ -51,10 +49,13 @@ class Erabiltzailea:
         self.saiakerak=3
         print("Saioa itxi duzu")
 
-    def erab_gehitu (self, izena, pasah, gal1, gald2):
+    def erab_gehitu (self, izena, pasah, gal1, gald2, adm):
         print("ERABIL--> ERAB_GEHITU")
-        ema=view.db.erabGehitu(izena, pasah, gal1, gald2)
-        print(ema)
+        view.db.erabGehitu(izena, pasah, gal1, gald2)
+        print(adm)
+        if adm:
+            view.db.administratzaileBilakatu(izena)
+        #print(ema)
 
     def galderaZuzenak(self,izena, gal1,gal2):
         zuzena=False
@@ -86,3 +87,31 @@ class Erabiltzailea:
             aldatu=True
         print(aldatu)
         return aldatu
+
+    def puntuazioaLortu(self,izena):
+        puntuazioa=view.db.puntuazioaLortu(izena)
+        erantz = str(puntuazioa)
+        puntuazioa = erantz[1:len(erantz) - 2]
+        return puntuazioa
+
+    def administratzaileaDa (self, izena):
+        print("ADMIN")
+        administratzailea = view.db.administratzaileaDa(izena)
+        print(administratzailea)
+        erantz = str(administratzailea)
+        administratzailea = erantz[1:len(erantz) - 2]
+        return administratzailea == '1'
+
+    def administratzaileBilakatu(self, izena):
+        view.db.administratzaileBilakatu(izena)
+
+    def erabiltzaileakEtaPuntuazioakLortu(self):
+        print("ERABILTZAILEAK")
+        print(view.db.zenbatErab())
+        zerrenda=view.db.erab_zerrenda()
+        print("erab guztiak")
+        print(zerrenda)
+        return zerrenda
+
+    def ezabatu(self, izena):
+        view.db.ezabatuErab(izena)
